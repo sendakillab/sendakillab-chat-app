@@ -1,0 +1,103 @@
+# -----------------------------
+# Secrets / environment
+# -----------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# -----------------------------
+# Python / FastAPI
+# -----------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage.xml
+.coverage
+htmlcov/
+
+# -----------------------------
+# Flutter / Dart
+# -----------------------------
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+**/ios/Pods/
+**/ios/.symlinks/
+**/macos/Pods/
+**/linux/flutter/ephemeral/
+**/windows/flutter/ephemeral/
+
+# -----------------------------
+# IDE / editor
+# -----------------------------
+.idea/
+.vscode/
+*.iml
+
+# -----------------------------
+# OS files
+# -----------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -----------------------------
+# Logs / runtime files
+# -----------------------------
+logs/
+*.log
+tmp/
+temp/
+cache/
+
+# -----------------------------
+# Application runtime data
+# -----------------------------
+data/
+uploads/
+exports/
+
+# -----------------------------
+# Local database / Docker artifacts
+# -----------------------------
+postgres-data/
+redis-data/
+ollama-data/
+docker-data/
+*.vhdx
+
+# -----------------------------
+# Backups / temporary migration files
+# -----------------------------
+*.backup
+*.bak
+*_backup*/
+*-backup/
+sendakillab-backup/
+
+# -----------------------------
+# Generated archives / installers
+# -----------------------------
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.exe
+*.msi

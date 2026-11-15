@@ -1,0 +1,104 @@
+name: sendakillab
+
+services:
+  api:
+    build:
+      context: ./services/api_fastapi
+    container_name: sendakillab-api
+    env_file: .env
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - ./data/uploads:/data/uploads
+      - ./data/exports:/data/exports
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [sendakillab_net]
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: sendakillab-postgres
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+    networks: [sendakillab_net]
+
+  redis:
+    image: redis:7-alpine
+    container_name: sendakillab-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks: [sendakillab_net]
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: sendakillab-ollama
+
+    ports:
+      - "11434:11434"
+
+    volumes:
+      - "C:/MyLab/ollama-data:/root/.ollama"
+
+    restart: unless-stopped
+
+    networks:
+      - sendakillab_net
+
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: sendakillab-ollama
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama_models:/root/.ollama
+  #   restart: unless-stopped
+  #   networks: [sendakillab_net]
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: sendakillab-pgadmin
+    profiles: ["admin"]
+    env_file: .env
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [sendakillab_net]
+
+networks:
+  sendakillab_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  # ollama_models:
