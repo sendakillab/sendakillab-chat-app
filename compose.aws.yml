@@ -1,0 +1,6 @@
+name: sendakillab
+
+services:
+   ollama:
+      volumes:
+      - /opt/sendakillab/ollama-data:/root/.ollama
